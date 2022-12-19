@@ -10,6 +10,8 @@ class CVlParser:
         self.league_page = None
         self.league_games = 0
         self.cup_games = 0
+        self.group = None
+        self.league = None
 
 
     def setTeamHomepage(self, team_homepage):
@@ -37,13 +39,18 @@ class CVlParser:
             i += self.gap_cup_games
 
 
+    def setLeague(self):
+        response = requests.get(self.team_homepage)
+        bs = BeautifulSoup(response.text, "lxml")
+        info_league = bs.find_all('div')[90].text.strip().split(",")
+        self.group = info_league[0][1:]
+        self.league = info_league[1][:len(info_league[1]) - 1]
+
+
 
     def getLeagueTimetable(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
-        '''info_league = bs.find_all('div')[90].text.strip().split(",")
-        group = info_league[0][1:]
-        league = info_league[1][:len(info_league[1]) - 1]'''
         opponents = bs.find_all("td")
         full_info_opponents = []
         for i in range(self.index_start, self.index_start + self.league_games * self.gap_league_games, self.gap_cup_games):
