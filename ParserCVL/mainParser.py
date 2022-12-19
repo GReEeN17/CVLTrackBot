@@ -17,6 +17,7 @@ class CVlParser:
     def setTeamHomepage(self, team_homepage):
         self.team_homepage = team_homepage
         self.setGames()
+        self.setLeague()
 
 
     def setLeaguePage(self, league_page):
