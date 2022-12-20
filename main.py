@@ -1,7 +1,7 @@
 from ParserCVL import mainParser
 from mainTelegram import dp
 from aiogram import executor
-import TelegramCVL
+import handlers
 
 
 def testingParser():
