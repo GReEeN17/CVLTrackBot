@@ -29,17 +29,61 @@ class Database:
         cursor = self.conn.cursor()
         cursor.execute(query)
         if select:
-            records = cursor
-        self.conn.commit()
+            records = cursor.fetchone()
+            cursor.close()
+            return records
+        else:
+            self.conn.commit()
         cursor.close()
 
 
-    def selectLG(self, game_id):
+    async def selectLG(self, game_id):
         select_query = f"""SELECT * FROM league_games WHERE id={game_id}"""
+        record = self.execute_query(select_query, select=True)
+        return record
 
 
-
-    def insertLG(self, league_games):
+    async def insertLG(self, league_games):
         for i, game in enumerate(league_games):
-            insert_query = f"""INSERT"""
+            while len(game) != 5:
+                game.append('')
+            insert_query = f"""INSERT OR REPLACE INTO league_games (id, hosts, guests, date, place, score) VALUES 
+                               ({i}, {game[0]}, {game[1]}, {game[2]}, {game[3]}, {game[4]})"""
+            self.execute_query(insert_query)
+
+
+    async def selectCG(self, game_id):
+        select_query = f"""SELECT * FROM cup_games WHERE id={game_id}"""
+        record = self.execute_query(select_query, select=True)
+        return record
+
+
+    async def insertCG(self, cup_games):
+        for i, game in enumerate(cup_games):
+            while len(game) != 6:
+                game.append('')
+            insert_query = f"""INSERT OR REPLACE INTO cup_games (id, round, hosts, guests, date, place, score) VALUES ({i}, {game[0]}, {game[1]}, {game[2]}, {game[3]}, {game[4]}, {game[5]})"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
