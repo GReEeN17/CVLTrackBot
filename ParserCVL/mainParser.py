@@ -54,7 +54,7 @@ class CVlParser:
         bs = BeautifulSoup(response.text, "lxml")
         opponents = bs.find_all("td")
         full_info_opponents = []
-        for i in range(self.index_start, self.index_start + self.league_games * self.gap_league_games, self.gap_cup_games):
+        for i in range(self.index_start, self.index_start + self.league_games * self.gap_league_games, self.gap_league_games):
             info_ab_op = []
             for j in range(self.gap_league_games - 1):
                 stripped_info = opponents[i + j].text.strip()
@@ -86,7 +86,7 @@ class CVlParser:
 def testing():
     parser = CVlParser()
     parser.setTeamHomepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
-    parser.getLeagueTimetable()
+    #parser.getLeagueTimetable()
     parser.getCupTimetable()
     '''url = "https://v-open.spb.ru/component/volleychamp/?view=players&tid=200"
     response = requests.get(url)

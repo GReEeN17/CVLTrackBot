@@ -1,6 +1,26 @@
+import os
 import sqlite3
 import logging
 import os
+import redis
+import ujson
+
+import config
+
+
+class Cache(redis.StrictRedis):
+    def __init__(self, host, port, password, charset="utf-8", decode_responses=True):
+        super(Cache, self).__init__(host, port, password, charset=charset, decode_responses=decode_responses)
+        logging.info("Redis started")
+
+    def jset(self, name, value, ex=0):
+        r = self.get(name)
+        if r is None:
+            return r
+        return ujson.loads(r)
+
+    def jget(self, name):
+        return ujson.loads(self.get(name))
 
 class Database:
     def __init__(self, name):
@@ -14,7 +34,7 @@ class Database:
         cursor = connection.cursor()
         cursor.execute('''CREATE TABLE league_games (id INT PRIMARY KEY, hosts TEXT, guests TEXT, date TEXT, place TEXT, score TEXT)''')
         cursor.execute('''CREATE TABLE cup_games (id INT PRIMARY KEY, round TEXT, hosts TEXT, guests TEXT, date TEXT, place TEXT, score TEXT)''')
-        cursor.execute('''CREATE TABLE table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
+        cursor.execute('''CREATE TABLE match_table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
         connection.commit()
         cursor.close()
 
@@ -62,7 +82,17 @@ class Database:
         for i, game in enumerate(cup_games):
             while len(game) != 6:
                 game.append('')
-            insert_query = f"""INSERT OR REPLACE INTO cup_games (id, round, hosts, guests, date, place, score) VALUES ({i}, {game[0]}, {game[1]}, {game[2]}, {game[3]}, {game[4]}, {game[5]})"""
+            insert_query = f"""INSERT OR REPLACE INTO cup_games (id, round, hosts, guests, date, place, score) VALUES 
+                               ({i}, {game[0]}, {game[1]}, {game[2]}, {game[3]}, {game[4]}, {game[5]})"""
+            self.execute_query(insert_query)
+
+
+cache = Cache(
+    host=config.REDIS_HOST,
+    port=config.REDIS_PORT,
+    password=config.REDIS_PASSWORD
+)
+database = Database(config.BOT_DB_NAME)
 
 
 
