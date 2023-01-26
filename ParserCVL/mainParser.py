@@ -12,12 +12,13 @@ class CVlParser:
         self.cup_games = 0
         self.group = None
         self.league = None
+        self.ind_cup_games = 0
+        self.ind_league_games = 0
 
 
     def setTeamHomepage(self, team_homepage):
         self.team_homepage = team_homepage
-        self.setGames()
-        self.setLeague()
+        self.setIndexesTables()
 
 
     def setLeaguePage(self, league_page):
@@ -30,14 +31,10 @@ class CVlParser:
         opponents = bs.find_all("td")
         self.league_games = 0
         self.cup_games = 0
-        i = self.index_start
-        while "Расписание" not in opponents[i].text:
-            self.league_games += 1
-            i += self.gap_league_games
-        i += 9
-        while "История" not in opponents[i].text:
-            self.cup_games += 1
-            i += self.gap_cup_games
+        gap_btw_games = self.gap_league_games if self.ind_league_games < self.ind_cup_games else self.gap_cup_games
+        i = self.ind_cup_games if self.ind_cup_games < self.ind_league_games else self.ind_league_games
+
+
 
 
     def setLeague(self):
@@ -65,6 +62,23 @@ class CVlParser:
         print(full_info_opponents)
 
 
+    def setIndexesTables(self):
+        response  = requests.get(self.team_homepage)
+        bs = BeautifulSoup(response.text, "lxml")
+        opponents = bs.find_all("td")
+        ind_cup_games = 0
+        ind_league_games = 0
+        for i, inf in enumerate(opponents):
+            if "Расписание" in inf.text and "Сезон" in inf.text:
+                if "Кубок" in inf.text:
+                    ind_cup_games = i
+                if not "Кубок" in inf.text:
+                    ind_league_games = i
+        self.ind_cup_games = ind_cup_games
+        self.ind_league_games = ind_league_games
+
+
+
     def getCupTimetable(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
@@ -87,7 +101,8 @@ def testing():
     parser = CVlParser()
     parser.setTeamHomepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
     #parser.getLeagueTimetable()
-    parser.getCupTimetable()
+    #parser.getCupTimetable()
+
     '''url = "https://v-open.spb.ru/component/volleychamp/?view=players&tid=200"
     response = requests.get(url)
     bs = BeautifulSoup(response.text, "lxml")

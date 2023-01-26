@@ -2,9 +2,10 @@ import unittest
 from unittest import IsolatedAsyncioTestCase
 
 from database import cache, database
+from mainTelegram import bot
 
-lg_test = [['SkyStepS', 'ВК "БЮРО"', 'перенесена на неопределенную дату'],
-           ['SkyStepS', 'ANTIFIRE', '15.10.2022 18:20 (Сб)', 'улица Маршала Новикова, 1к3', '3:0'],
+lg_test = [['SkyStepS', 'ВК_БЮРО', 'перенесена_на_неопределенную_дату'],
+           ['SkyStepS', 'ANTIFIRE', '15.10.2022_18:20_(Сб)', 'улица_Маршала_Новикова,_1к3', '3:0'],
            ['SkyStepS', 'Юниоры Приморы', '20.10.2022 18:45 (Чт)', 'Королева 23', '3:0'],
            ['Баррель', 'SkyStepS', '24.10.2022 20:45 (Пн)', 'ул. Вязовая, д. 10 (Академия Платонова)', '1:3'],
            ['SkyStepS', 'RED BARONS', '19.11.2022 18:20 (Сб)', 'улица Маршала Новикова, 1к3', '3:2'],
@@ -25,7 +26,7 @@ cg_test = [['3 (до 29.01.2023)', 'SkyStepS'], ['1 (до 20.11.2022)', 'SkyStep
 class TestDB(IsolatedAsyncioTestCase):
     async def test_crud(self):
         await database.insertLG(lg_test)
-        self.assertEqual(await database.selectLG(0), ('SkyStepS', 'ВК "БЮРО"', 'перенесена на неопределенную дату', '', '', ''))
+        self.assertEqual(await database.selectLG(0), ('SkyStepS', 'ВК_БЮРО', 'перенесена_на_неопределенную_дату', '', '', ''))
 
-
-unittest.main()
+if __name__ == '__main__':
+    unittest.main()
