@@ -67,7 +67,7 @@ class CVlParser:
         opponents = bs.find_all("td")
         full_info_opponents = []
         start = self.ind_league_games + self.gap_league_games + 1
-        for i in range(start, self.index_start + self.league_games * self.gap_league_games, self.gap_league_games):
+        for i in range(start, start + self.league_games * self.gap_league_games, self.gap_league_games):
             info_ab_op = []
             for j in range(self.gap_league_games - 1):
                 stripped_info = opponents[i + j].text.strip()
