@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
+
 class CVlParser:
     def __init__(self):
         self.index_start = 23
@@ -15,19 +16,16 @@ class CVlParser:
         self.ind_cup_games = 0
         self.ind_league_games = 0
 
-
-    def setTeamHomepage(self, team_homepage):
+    def set_team_homepage(self, team_homepage):
         self.team_homepage = team_homepage
-        self.setIndexesTables()
-        self.setGames()
+        self.set_indexes_tables()
+        self.set_games()
 
-
-    def setLeaguePage(self, league_page):
+    def set_league_page(self, league_page):
         self.league_page = league_page
 
-
-    def setIndexesTables(self):
-        response  = requests.get(self.team_homepage)
+    def set_indexes_tables(self):
+        response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
         opponents = bs.find_all("td")
         ind_cup_games = 0
@@ -36,13 +34,12 @@ class CVlParser:
             if "Расписание" in inf.text and "Сезон" in inf.text:
                 if "Кубок" in inf.text:
                     ind_cup_games = i
-                if not "Кубок" in inf.text:
+                if "Кубок" not in inf.text:
                     ind_league_games = i
         self.ind_cup_games = ind_cup_games
         self.ind_league_games = ind_league_games
 
-
-    def setGames(self):
+    def set_games(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
         opponents = bs.find_all("td")
@@ -57,17 +54,14 @@ class CVlParser:
             self.cup_games += 1 if gap_btw_games == self.gap_cup_games else 0
             frc += gap_btw_games
 
-
-    def setLeague(self):
+    def set_league(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
         info_league = bs.find_all('div')[90].text.strip().split(",")
         self.group = info_league[0][1:]
         self.league = info_league[1][:len(info_league[1]) - 1]
 
-
-
-    def getLeagueTimetable(self):
+    def get_league_timetable(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
         opponents = bs.find_all("td")
@@ -83,9 +77,7 @@ class CVlParser:
             full_info_opponents.append(info_ab_op)
         print(full_info_opponents)
 
-
-
-    def getCupTimetable(self):
+    def get_cup_timetable(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
         opponents = bs.find_all("td")
@@ -105,9 +97,9 @@ class CVlParser:
 
 def testing():
     parser = CVlParser()
-    parser.setTeamHomepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
-    parser.getLeagueTimetable()
-    parser.getCupTimetable()
+    parser.set_team_homepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
+    parser.get_league_timetable()
+    parser.get_cup_timetable()
 
     '''url = "https://v-open.spb.ru/component/volleychamp/?view=players&tid=200"
     response = requests.get(url)
@@ -121,9 +113,7 @@ def testing():
         print(results[i].text)
     print(results[108].text)'''
 
-#со 110 индекса a начинаются команды лиги
-#со 133 индекса a начинаются команды кубка
-#90 индекс div лига наша
-#с 23 индекса td начинаются соперники - разрыв в 7 между играми
-#с 109 индекса td начингаются соперники кубка разрыв - 8
-#для переодического вызова функций - https://ru.stackoverflow.com/questions/951177/Как-написать-периодически-выполняемую-функцию-для-бота
+# со 110 индекса a начинаются команды лиги со 133 индекса a начинаются команды кубка 90 индекс div лига наша с 23
+# индекса td начинаются соперники - разрыв в 7 между играми с 109 индекса td начингаются соперники кубка разрыв - 8
+# для переодического вызова функций -
+# https://ru.stackoverflow.com/questions/951177/Как-написать-периодически-выполняемую-функцию-для-бота
