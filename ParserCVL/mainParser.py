@@ -19,47 +19,11 @@ class CVlParser:
     def setTeamHomepage(self, team_homepage):
         self.team_homepage = team_homepage
         self.setIndexesTables()
+        self.setGames()
 
 
     def setLeaguePage(self, league_page):
         self.league_page = league_page
-
-
-    def setGames(self):
-        response = requests.get(self.team_homepage)
-        bs = BeautifulSoup(response.text, "lxml")
-        opponents = bs.find_all("td")
-        self.league_games = 0
-        self.cup_games = 0
-        gap_btw_games = self.gap_league_games if self.ind_league_games < self.ind_cup_games else self.gap_cup_games
-        i = self.ind_cup_games if self.ind_cup_games < self.ind_league_games else self.ind_league_games
-
-
-
-
-    def setLeague(self):
-        response = requests.get(self.team_homepage)
-        bs = BeautifulSoup(response.text, "lxml")
-        info_league = bs.find_all('div')[90].text.strip().split(",")
-        self.group = info_league[0][1:]
-        self.league = info_league[1][:len(info_league[1]) - 1]
-
-
-
-    def getLeagueTimetable(self):
-        response = requests.get(self.team_homepage)
-        bs = BeautifulSoup(response.text, "lxml")
-        opponents = bs.find_all("td")
-        full_info_opponents = []
-        for i in range(self.index_start, self.index_start + self.league_games * self.gap_league_games, self.gap_league_games):
-            info_ab_op = []
-            for j in range(self.gap_league_games - 1):
-                stripped_info = opponents[i + j].text.strip()
-                if stripped_info == '':
-                    break
-                info_ab_op.append(stripped_info)
-            full_info_opponents.append(info_ab_op)
-        print(full_info_opponents)
 
 
     def setIndexesTables(self):
@@ -78,13 +42,55 @@ class CVlParser:
         self.ind_league_games = ind_league_games
 
 
+    def setGames(self):
+        response = requests.get(self.team_homepage)
+        bs = BeautifulSoup(response.text, "lxml")
+        opponents = bs.find_all("td")
+        gap_btw_games = self.gap_league_games if self.ind_league_games < self.ind_cup_games else self.gap_cup_games
+        frc = self.ind_cup_games if self.ind_cup_games < self.ind_league_games else self.ind_league_games
+        frc += gap_btw_games + 1
+        while "История" not in opponents[frc].text:
+            if "Расписание" in opponents[frc].text:
+                gap_btw_games = self.gap_league_games if gap_btw_games == self.gap_cup_games else self.gap_cup_games
+                frc += gap_btw_games + 1
+            self.league_games += 1 if gap_btw_games == self.gap_league_games else 0
+            self.cup_games += 1 if gap_btw_games == self.gap_cup_games else 0
+            frc += gap_btw_games
+
+
+    def setLeague(self):
+        response = requests.get(self.team_homepage)
+        bs = BeautifulSoup(response.text, "lxml")
+        info_league = bs.find_all('div')[90].text.strip().split(",")
+        self.group = info_league[0][1:]
+        self.league = info_league[1][:len(info_league[1]) - 1]
+
+
+
+    def getLeagueTimetable(self):
+        response = requests.get(self.team_homepage)
+        bs = BeautifulSoup(response.text, "lxml")
+        opponents = bs.find_all("td")
+        full_info_opponents = []
+        start = self.ind_league_games + self.gap_league_games + 1
+        for i in range(start, self.index_start + self.league_games * self.gap_league_games, self.gap_league_games):
+            info_ab_op = []
+            for j in range(self.gap_league_games - 1):
+                stripped_info = opponents[i + j].text.strip()
+                if stripped_info == '':
+                    break
+                info_ab_op.append(stripped_info)
+            full_info_opponents.append(info_ab_op)
+        print(full_info_opponents)
+
+
 
     def getCupTimetable(self):
         response = requests.get(self.team_homepage)
         bs = BeautifulSoup(response.text, "lxml")
         opponents = bs.find_all("td")
         full_info_opponents = []
-        start = self.index_start + self.league_games * self.gap_league_games + self.gap_cup_games + 1
+        start = self.ind_cup_games + self.gap_cup_games + 1
         end = start + self.gap_cup_games * self.cup_games
         for i in range(start, end, self.gap_cup_games):
             info_ab_op = []
@@ -100,8 +106,8 @@ class CVlParser:
 def testing():
     parser = CVlParser()
     parser.setTeamHomepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
-    #parser.getLeagueTimetable()
-    #parser.getCupTimetable()
+    parser.getLeagueTimetable()
+    parser.getCupTimetable()
 
     '''url = "https://v-open.spb.ru/component/volleychamp/?view=players&tid=200"
     response = requests.get(url)
