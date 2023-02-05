@@ -75,7 +75,7 @@ class CVlParser:
                     break
                 info_ab_op.append(stripped_info)
             full_info_opponents.append(info_ab_op)
-        print(full_info_opponents)
+        return full_info_opponents
 
     def get_cup_timetable(self):
         response = requests.get(self.team_homepage)
@@ -92,14 +92,19 @@ class CVlParser:
                     break
                 info_ab_op.append(stripped_info)
             full_info_opponents.append(info_ab_op)
-        print(full_info_opponents)
+        return full_info_opponents
+
+
+parser = CVlParser()
+parser.set_team_homepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
+
 
 
 def testing():
-    parser = CVlParser()
+    '''parser = CVlParser()
     parser.set_team_homepage("https://v-open.spb.ru/component/volleychamp/?view=players&tid=200")
     parser.get_league_timetable()
-    parser.get_cup_timetable()
+    parser.get_cup_timetable()'''
 
     '''url = "https://v-open.spb.ru/component/volleychamp/?view=players&tid=200"
     response = requests.get(url)

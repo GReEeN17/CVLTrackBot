@@ -9,5 +9,5 @@ dp = Dispatcher(bot)
 
 async def on_shutdown(dp):
     logging.warning('Shutting down..')
-    db._conn.close()
+    db.conn.close()
     logging.warning("DB Connection closed")

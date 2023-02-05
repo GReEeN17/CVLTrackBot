@@ -52,9 +52,7 @@ class TestDB(unittest.TestCase):
         self.assertEqual(database.select_lg(5),
                          (5, 'Морские волки', 'SkyStepS', '15.03.2023 19:40 (Ср)', 'Двинская ул., 5/7', ''))
         self.assertEqual(database.select_lg(6),
-                         (
-                             6, 'SkyStepS', 'Oris (Uglovo Team)', '25.03.2023 11:30 (Сб)', 'Комендантский просп. 29к2',
-                             ''))
+                         (6, 'SkyStepS', 'Oris (Uglovo Team)', '25.03.2023 11:30 (Сб)', 'Комендантский просп. 29к2',''))
         self.assertEqual(database.select_lg(7),
                          (7, 'SkyStepS', 'LEGENDA', '01.04.2023 11:30 (Сб)', 'Комендантский просп. 29к2', ''))
         self.assertEqual(database.select_lg(8),

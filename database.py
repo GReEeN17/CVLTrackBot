@@ -48,13 +48,15 @@ class Database:
             self.create_db()
         return sqlite3.connect(f"{self.name}.db")
 
-    def execute_query(self, query, data=None, select=False):
+    def execute_query(self, query, data=None, select=False, clear=False):
         cursor = self.conn.cursor()
         if select:
             cursor.execute(query)
             records = cursor.fetchone()
             cursor.close()
             return records
+        elif clear:
+            cursor.execute(query)
         else:
             cursor.execute(query, data)
             self.conn.commit()
@@ -85,6 +87,15 @@ class Database:
             insert_query = "INSERT OR REPLACE INTO cup_games (id, round, hosts, guests, date, place, score) VALUES " \
                            "(?, ?, ?, ?, ?, ?, ?)"
             self.execute_query(insert_query, data=(i, game[0], game[1], game[2], game[3], game[4], game[5]))
+
+    def clear_lg(self):
+        insert_query = "DELETE FROM league_games"
+        self.execute_query(insert_query, clear=True)
+
+    def clear_cg(self):
+        insert_query = "DELETE FROM cup_games"
+        self.execute_query(insert_query, clear=True)
+
 
 
 cache = Cache(
