@@ -4,6 +4,7 @@ from aiogram import types
 from ParserCVL.mainParser import parser
 import main
 
+
 @dp.message_handler(commands=["show_league_tt"])
 async def get_league_timetable(message: types.Message):
     league_tt = parser.get_league_timetable()
