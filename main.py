@@ -1,3 +1,4 @@
+import asyncio
 import mainTelegram
 from ParserCVL import mainParser
 from mainTelegram import dp
@@ -12,8 +13,9 @@ def testingParser():
 
 if __name__ == '__main__':
     #testingParser()
+    loop = asyncio.get_event_loop()
+    loop.create_task(periodic())
     executor.start_polling(dp, skip_updates=True, on_shutdown=mainTelegram.on_shutdown)
-    #dp.loop.create_task(periodic())
 
 #создание топа игровоков (количество mvp)
 #текущее место в таблице(?)

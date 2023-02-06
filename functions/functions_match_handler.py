@@ -9,7 +9,9 @@ def compare_dates(curr_time, game_time, next_match, id_next_match, i):
     match_date = datetime(year, month, day, hour, minute)
     if curr_time < match_date:
         next_match = match_date
-    return [next_match, i]
+        return [next_match, i]
+    else:
+        return [next_match, None]
 
 
 def set_next_game(league_tt, cup_tt, curr_time):
