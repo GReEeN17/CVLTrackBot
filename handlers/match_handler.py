@@ -7,6 +7,7 @@ from support_handlers.support_match_handler import make_league_match_mes, make_c
 from support_handlers.support_match_handler import make_rescheduled_league_mes, make_rescheduled_cup_mes
 import datetime
 
+
 @dp.message_handler(commands=["show_next_game"])
 async def get_next_game(message: types.Message):
     league_tt = parser.get_league_timetable()

@@ -57,6 +57,7 @@ class TestDB(unittest.TestCase):
                          (7, 'SkyStepS', 'LEGENDA', '01.04.2023 11:30 (Сб)', 'Комендантский просп. 29к2', ''))
         self.assertEqual(database.select_lg(8),
                          (8, 'Охта', 'SkyStepS', '08.04.2023 18:50 (Сб)', 'пр. Энергетиков 50', ''))
+        database.clear_lg()
 
     def test_cup_games(self):
         database.insert_cg(cg_test)
@@ -69,6 +70,7 @@ class TestDB(unittest.TestCase):
         self.assertEqual(database.select_cg(2),
                          (2, '3 (до 29.01.2023)', 'ПМЦ Калининский', 'SkyStepS', '20.01.2023 19:50 (Пт)',
                           'Демьяна Бедного 9', '3:2'))
+        database.clear_cg()
 
 
 if __name__ == '__main__':

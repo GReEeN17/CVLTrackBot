@@ -57,6 +57,7 @@ class Database:
             return records
         elif clear:
             cursor.execute(query)
+            self.conn.commit()
         else:
             cursor.execute(query, data)
             self.conn.commit()
