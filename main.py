@@ -18,4 +18,3 @@ if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True, on_shutdown=mainTelegram.on_shutdown)
 
 #создание топа игровоков (количество mvp)
-#текущее место в таблице(?)
