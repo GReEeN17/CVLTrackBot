@@ -2,9 +2,9 @@ from mainTelegram import dp
 from mainTelegram import bot
 from aiogram import types
 from ParserCVL.mainParser import parser
-from support_handlers.support_match_handler import set_next_game
-from support_handlers.support_match_handler import make_league_match_mes, make_cup_match_mes
-from support_handlers.support_match_handler import make_rescheduled_league_mes, make_rescheduled_cup_mes
+from functions.functions_match_handler import set_next_game
+from functions.functions_match_handler import make_league_match_mes, make_cup_match_mes
+from functions.functions_match_handler import make_rescheduled_league_mes, make_rescheduled_cup_mes
 import datetime
 
 
