@@ -2,9 +2,9 @@ from mainTelegram import dp
 from mainTelegram import bot
 from aiogram import types
 from ParserCVL.mainParser import parser
-from support_handlers.date_comparasion import set_next_game
-from support_handlers.date_comparasion import make_league_match_mes, make_cup_match_mes
-from support_handlers.date_comparasion import make_rescheduled_league_mes, make_rescheduled_cup_mes
+from support_handlers.support_match_handler import set_next_game
+from support_handlers.support_match_handler import make_league_match_mes, make_cup_match_mes
+from support_handlers.support_match_handler import make_rescheduled_league_mes, make_rescheduled_cup_mes
 import datetime
 
 @dp.message_handler(commands=["show_next_game"])
@@ -50,17 +50,3 @@ async def get_next_game(message: types.Message):
     else:
         await bot.send_message(message.chat.id, "*Все игры сыграны!*\U0001F973", parse_mode="Markdown")
 
-
-
-    '''if next_match is not None:
-        match = league_tt[next_match]
-        await bot.send_message(message.chat.id,
-                               f"_Следующий матч:_ \n\n*· {match[0]} - {match[1]}*: " + f"_{match[2]}, {match[3]}_",
-                               parse_mode="Markdown")
-    elif rescheduled:
-        resulted_message = '_Все несыгранные игры перенесены на неопрелённое время_:\n\n'
-        for match in rescheduled_matches:
-            resulted_message += f"*· {match[0]} - {match[1]}*: " + f"_{match[2]}_" + 2 * "\n"
-        await bot.send_message(message.chat.id, resulted_message, parse_mode="Markdown")
-    else:
-        await bot.send_message(message.chat.id, "*Все игры сыграны!*\U0001F973", parse_mode="Markdown")'''
