@@ -1,5 +1,4 @@
 from database import database
-from ParserCVL.mainParser import parser
 
 
 def cycle_cmp_db_tt(tt, responses, league=False):
@@ -46,11 +45,11 @@ def make_responses(league=False):
     return responses
 
 
-def compare_db_w_tt():
-    league_tt = parser.get_league_timetable()
-    cup_tt = parser.get_cup_timetable()
+def compare_db_w_tt(league_tt, cup_tt):
     responses_league = make_responses(league=True)
     responses_cup = make_responses()
     res_cmp_league = cycle_cmp_db_tt(league_tt, responses_league, league=True)
     res_cmp_cup = cycle_cmp_db_tt(cup_tt, responses_cup)
+    database.insert_lg(league_tt)
+    database.insert_cg(cup_tt)
     return [res_cmp_league, res_cmp_cup]

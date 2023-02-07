@@ -1,9 +1,8 @@
 import asyncio
-from mainTelegram import bot
+from second_thread.league_check import check_updates
 
 
 async def periodic():
     while True:
         await asyncio.sleep(10)
-        await bot.send_message(1072674059, "working")
-#sleep в секундах
+        await check_updates()
