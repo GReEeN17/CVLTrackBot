@@ -36,11 +36,3 @@ def compare_db_w_tt(league_tt):
                         differences.append([i, j, "played"])
                     break
     return [responses, differences] if count == len(league_tt) else "all_played"
-
-
-'''прописать случаи к каждому различию и сделать отводные ветки(else), в итоге функция будет возвращать 
-массив из специальных параметров diff_time, diff_place, diff_result это будет возврщаться из функции 
-в виде двух массивовв одном differences_site и differences_db далее в паралллеьном потоке от  работы
-бота они будут обрабатываться и выкидывать на выходе различие, если таковые будут. Остаётся прописать логику
-это будет муторно((('''
-
