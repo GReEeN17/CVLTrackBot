@@ -1,5 +1,5 @@
 import unittest
-from functions.functions_database import compare_db_w_tt
+from functions.functions_league_check import compare_db_w_tt
 from database import database
 from data import lg_test_1, lg_test_2, lg_test_3, lg_test_5, lg_test_6
 
@@ -61,8 +61,8 @@ class TestCDT(unittest.TestCase):
                                            [5, 5, 'played'],
                                            [6, 6, 'played'],
                                            [7, 7, 'played'],
-                                           [8, 8, 'played']]])'''
+                                           [8, 8, 'played']]])
 
     def test_cdt_9(self):
         res, responses = make_res_n_responses(lg_test_5, lg_test_2)
-        self.assertEqual(res, [responses, []])
+        self.assertEqual(res, [responses, []])'''

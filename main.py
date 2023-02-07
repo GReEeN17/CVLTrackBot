@@ -3,9 +3,7 @@ import mainTelegram
 from ParserCVL import mainParser
 from mainTelegram import dp
 from aiogram import executor
-from second_thread import periodic
-import handlers
-import unittest
+from second_thread.sec_thr_main import periodic
 
 
 def testingParser():
