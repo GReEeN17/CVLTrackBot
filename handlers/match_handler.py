@@ -5,6 +5,7 @@ from ParserCVL.mainParser import parser
 from functions.functions_match_handler import set_next_game
 from functions.functions_match_handler import make_league_match_mes, make_cup_match_mes
 from functions.functions_match_handler import make_rescheduled_league_mes, make_rescheduled_cup_mes
+from second_thread.league_check import check_updates
 import datetime
 
 
@@ -12,6 +13,7 @@ import datetime
 async def get_next_game(message: types.Message):
     league_tt = parser.get_league_timetable()
     cup_tt = parser.get_cup_timetable()
+    await check_updates()
     curr_time = datetime.datetime.now()
     set_game = set_next_game(league_tt, cup_tt, curr_time)
     rescheduled_league = set_game[0]

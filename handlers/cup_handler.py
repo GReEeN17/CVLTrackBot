@@ -2,12 +2,14 @@ from mainTelegram import dp
 from mainTelegram import bot
 from aiogram import types
 from ParserCVL.mainParser import parser
+from second_thread.league_check import check_updates
 import main
 
 
 @dp.message_handler(commands=["show_cup_tt"])
 async def get_cup_timetable(message: types.Message):
     cup_tt = parser.get_cup_timetable()
+    await check_updates()
     resulted_message = ''
     for match in cup_tt:
         if len(match) == 4:
