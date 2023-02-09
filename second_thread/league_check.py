@@ -1,6 +1,7 @@
 from mainTelegram import bot
 from functions.functions_league_check import compare_db_w_tt
 from ParserCVL.mainParser import parser
+from database import database
 
 
 def make_resulting_message(tt, responses, differences, league=False):
@@ -53,16 +54,19 @@ async def check_updates():
     else:
         responses_l, differences_l = cmp_res[0][0], cmp_res[0][1]
         responses_c, differences_c = cmp_res[1][0], cmp_res[1][1]
-    if new_season_l:
-        await bot.send_message(1072674059, 'Начался новый сезон лиги, чтобы посмотреть актуальное расписание лиги '
-                                           'наберите */show_league_tt*', parse_mode='Markdown')
-    if new_season_c:
-        await bot.send_message(1072674059, 'Начался новый сезон лиги, чтобы посмотреть актуальное расписание кубка '
-                                           'наберите */show_cup_tt*', parse_mode='Markdown')
-    if not new_season_l:
-        res_message = make_resulting_message(league_tt, responses_l, differences_l, league=True)
-        await bot.send_message(1072674059, res_message, parse_mode='Markdown')
-    if not new_season_c:
-        res_message = make_resulting_message(cup_tt, responses_c, differences_c)
-        await bot.send_message(1072674059, res_message, parse_mode='Markdown')
+    id_response = database.select_telegram_ids()
+    if id_response:
+        for i in id_response:
+            if new_season_l:
+                await bot.send_message(int(i[0]), 'Начался новый сезон лиги, чтобы посмотреть актуальное расписание'
+                                                  ' лиги наберите */show_league_tt*', parse_mode='Markdown')
+            if new_season_c:
+                await bot.send_message(int(i[0]), 'Начался новый сезон лиги, чтобы посмотреть актуальное расписание'
+                                                  ' кубка наберите */show_cup_tt*', parse_mode='Markdown')
+            if not new_season_l:
+                res_message = make_resulting_message(league_tt, responses_l, differences_l, league=True)
+                await bot.send_message(int(i[0]), res_message, parse_mode='Markdown')
+            if not new_season_c:
+                res_message = make_resulting_message(cup_tt, responses_c, differences_c)
+                await bot.send_message(int(i[0]), res_message, parse_mode='Markdown')
 

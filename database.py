@@ -40,6 +40,7 @@ class Database:
             place TEXT, score TEXT)''')
         cursor.execute('''CREATE TABLE local_rating (first_name TEXT, surname TEXT PRIMARY KEY, points INT)''')
         cursor.execute('''CREATE TABLE match_table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
+        cursor.execute('''CREATE TABLE telegram_ids (id INT PRIMARY KEY)''')
         connection.commit()
         cursor.close()
 
@@ -49,11 +50,16 @@ class Database:
             self.create_db()
         return sqlite3.connect(f"{self.name}.db")
 
-    def execute_query(self, query, data=None, select=False, clear=False):
+    def execute_query(self, query, data=None, select=False, select_ids=False, clear=False):
         cursor = self.conn.cursor()
         if select:
             cursor.execute(query, data)
             records = cursor.fetchone()
+            cursor.close()
+            return records
+        elif select_ids:
+            cursor.execute(query)
+            records = cursor.fetchall()
             cursor.close()
             return records
         elif clear:
@@ -104,17 +110,30 @@ class Database:
             insert_query = "INSERT INTO local_rating (first_name, surname, points) VALUES (?, ?, ?)"
             self.execute_query(insert_query, data=(first_name, surname, points))
 
+    def select_telegram_ids(self):
+        select_query = 'SELECT * FROM telegram_ids'
+        record = self.execute_query(select_query, select_ids=True)
+        return record
+
+    def insert_telegram_id(self, telegram_id):
+        insert_query = 'INSERT INTO telegram_ids (id) VALUES (?)'
+        self.execute_query(insert_query, data=(telegram_id, ))
+
     def clear_lg(self):
-        insert_query = "DELETE FROM league_games"
-        self.execute_query(insert_query, clear=True)
+        clear_query = "DELETE FROM league_games"
+        self.execute_query(clear_query, clear=True)
 
     def clear_cg(self):
-        insert_query = "DELETE FROM cup_games"
-        self.execute_query(insert_query, clear=True)
+        clear_query = "DELETE FROM cup_games"
+        self.execute_query(clear_query, clear=True)
 
     def clear_lr(self):
-        insert_query = "DELETE FROM local_rating"
-        self.execute_query(insert_query, clear=True)
+        clear_query = "DELETE FROM local_rating"
+        self.execute_query(clear_query, clear=True)
+
+    def clear_ti(self):
+        clear_query = "DELETE FROM telegram_ids"
+        self.execute_query(clear_query, clear=True)
 
 
 
