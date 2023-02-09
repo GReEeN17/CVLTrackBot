@@ -38,6 +38,7 @@ class Database:
         cursor.execute(
             '''CREATE TABLE cup_games (id INT PRIMARY KEY, round TEXT, hosts TEXT, guests TEXT, date TEXT, 
             place TEXT, score TEXT)''')
+        cursor.execute('''CREATE TABLE local_rating (first_name Text, surname Text PRIMARY KEY, score INT)''')
         cursor.execute('''CREATE TABLE match_table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
         connection.commit()
         cursor.close()
@@ -89,12 +90,30 @@ class Database:
                            "(?, ?, ?, ?, ?, ?, ?)"
             self.execute_query(insert_query, data=(i, game[0], game[1], game[2], game[3], game[4], game[5]))
 
+    def select_lr(self, first_name, surname):
+        select_query = f"""SELECT * FROM local_rating WHERE surname={surname} AND first_name={first_name}"""
+        record = self.execute_query(select_query, select=True)
+        return record
+
+    def insert_or_update_lr(self, first_name, surname, points):
+        record = self.select_lr(first_name, surname)
+        if record:
+            update_query = "UPDATE local_rating SET points=? WHERE (first_name=?) AND (surname=?)"
+            self.execute_query(update_query, data=(record[2] + points, record[0], record[1]))
+        else:
+            insert_query = "INSERT INTO local_rating (first_name, surname, points) VALUES (?, ?, ?)"
+            self.execute_query(insert_query, data=(first_name, surname, points))
+
     def clear_lg(self):
         insert_query = "DELETE FROM league_games"
         self.execute_query(insert_query, clear=True)
 
     def clear_cg(self):
         insert_query = "DELETE FROM cup_games"
+        self.execute_query(insert_query, clear=True)
+
+    def clear_lr(self):
+        insert_query = "DELETE FROM local_rating"
         self.execute_query(insert_query, clear=True)
 
 
