@@ -38,7 +38,7 @@ class Database:
         cursor.execute(
             '''CREATE TABLE cup_games (id INT PRIMARY KEY, round TEXT, hosts TEXT, guests TEXT, date TEXT, 
             place TEXT, score TEXT)''')
-        cursor.execute('''CREATE TABLE local_rating (first_name Text, surname Text PRIMARY KEY, score INT)''')
+        cursor.execute('''CREATE TABLE local_rating (first_name TEXT, surname TEXT PRIMARY KEY, points INT)''')
         cursor.execute('''CREATE TABLE match_table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
         connection.commit()
         cursor.close()
@@ -52,7 +52,7 @@ class Database:
     def execute_query(self, query, data=None, select=False, clear=False):
         cursor = self.conn.cursor()
         if select:
-            cursor.execute(query)
+            cursor.execute(query, data)
             records = cursor.fetchone()
             cursor.close()
             return records
@@ -65,8 +65,8 @@ class Database:
         cursor.close()
 
     def select_lg(self, game_id):
-        select_query = f"""SELECT * FROM league_games WHERE id={game_id}"""
-        record = self.execute_query(select_query, select=True)
+        select_query = "SELECT * FROM league_games WHERE id=?"
+        record = self.execute_query(select_query, data=(game_id, ), select=True)
         return record
 
     def insert_lg(self, league_games):
@@ -78,8 +78,8 @@ class Database:
             self.execute_query(insert_query, data=(i, game[0], game[1], game[2], game[3], game[4]))
 
     def select_cg(self, game_id):
-        select_query = f"""SELECT * FROM cup_games WHERE id={game_id}"""
-        record = self.execute_query(select_query, select=True)
+        select_query = "SELECT * FROM cup_games WHERE id=?"
+        record = self.execute_query(select_query, data=(game_id, ), select=True)
         return record
 
     def insert_cg(self, cup_games):
@@ -91,8 +91,8 @@ class Database:
             self.execute_query(insert_query, data=(i, game[0], game[1], game[2], game[3], game[4], game[5]))
 
     def select_lr(self, first_name, surname):
-        select_query = f"""SELECT * FROM local_rating WHERE surname={surname} AND first_name={first_name}"""
-        record = self.execute_query(select_query, select=True)
+        select_query = "SELECT * FROM local_rating WHERE surname=? AND first_name=?"
+        record = self.execute_query(select_query, data=(surname, first_name), select=True)
         return record
 
     def insert_or_update_lr(self, first_name, surname, points):
