@@ -15,6 +15,9 @@ class CVlParser:
         self.league = None
         self.ind_cup_games = 0
         self.ind_league_games = 0
+        self.url_leagues = ['https://v-open.spb.ru/hard-liga-v.html', 'https://v-open.spb.ru/rezult-hard-liga.html',
+                            'https://v-open.spb.ru/rezul-tsuper-liga.html',
+                            'https://v-open.spb.ru/result-medium-liga-sever.html']
 
     def set_team_homepage(self, team_homepage):
         self.team_homepage = team_homepage
@@ -93,6 +96,16 @@ class CVlParser:
                 info_ab_op.append(stripped_info)
             full_info_opponents.append(info_ab_op)
         return full_info_opponents
+
+    def get_current_position(self):
+        for league in self.url_leagues:
+            response = requests.get(league)
+            bs = BeautifulSoup(response.text, "lxml")
+            find_sky_steps = bs.find_all("tbody")
+            for i in find_sky_steps:
+                stripped_text = i.text.split()
+                if stripped_text[1] == 'SkyStepS':
+                    return [stripped_text[0], stripped_text[1], stripped_text[-5], stripped_text[-3], stripped_text[-4]]
 
 
 parser = CVlParser()
