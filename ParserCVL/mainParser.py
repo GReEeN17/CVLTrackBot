@@ -105,7 +105,7 @@ class CVlParser:
             for i in find_sky_steps:
                 stripped_text = i.text.split()
                 if stripped_text[1] == 'SkyStepS':
-                    return [stripped_text[0], stripped_text[1], stripped_text[-5], stripped_text[-3], stripped_text[-4]]
+                    return [stripped_text[0], stripped_text[1], stripped_text[-5], stripped_text[-4]]
 
 
 parser = CVlParser()

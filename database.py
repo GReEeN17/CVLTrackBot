@@ -40,6 +40,8 @@ class Database:
             place TEXT, score TEXT)''')
         cursor.execute('''CREATE TABLE local_rating (first_name TEXT, surname TEXT PRIMARY KEY, points INT)''')
         cursor.execute('''CREATE TABLE match_table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
+        cursor.execute('''CREATE TABLE cur_position (position INT, command TEXT PRIMARY KEY, 
+        pl_games INT, points INT)''')
         cursor.execute('''CREATE TABLE telegram_ids (id INT PRIMARY KEY)''')
         connection.commit()
         cursor.close()
@@ -119,6 +121,27 @@ class Database:
         insert_query = 'INSERT INTO telegram_ids (id) VALUES (?)'
         self.execute_query(insert_query, data=(telegram_id, ))
 
+    def select_cur_pos(self):
+        select_query = 'SELECT * FROM cur_position'
+        record = self.execute_query(select_query, select_ids=True)
+        return record
+
+    def insert_cur_pos(self, cur_pos, command, pl_games, points):
+        insert_query = 'INSERT INTO cur_position (cur_pos, command, pl_games, points) VALUES (?, ?, ?, ?)'
+        self.execute_query(insert_query, data=(cur_pos, command, pl_games, points))
+
+    def update_cur_pos(self, cur_pos, command):
+        update_query = 'UPDATE cur_position SET cur_pos=? WHERE command=?'
+        self.execute_query(update_query, data=(cur_pos, command))
+
+    def update_pl_games(self, pl_games, command):
+        update_query = 'UPDATE cur_position SET pl_games=? WHERE command=?'
+        self.execute_query(update_query, data=(pl_games, command))
+
+    def update_points(self, points, command):
+        update_query = 'UPDATE cur_position SET points=? WHERE command=?'
+        self.execute_query(update_query, data=(points, command))
+
     def clear_lg(self):
         clear_query = "DELETE FROM league_games"
         self.execute_query(clear_query, clear=True)
@@ -133,6 +156,10 @@ class Database:
 
     def clear_ti(self):
         clear_query = "DELETE FROM telegram_ids"
+        self.execute_query(clear_query, clear=True)
+
+    def clear_cur_pos(self):
+        clear_query = 'DELETE FROM cur_position'
         self.execute_query(clear_query, clear=True)
 
 
