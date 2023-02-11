@@ -3,7 +3,6 @@ from mainTelegram import bot
 from aiogram import types
 from ParserCVL.mainParser import parser
 from second_thread.league_check import check_updates
-import main
 
 
 @dp.message_handler(commands=["show_cup_tt"])
