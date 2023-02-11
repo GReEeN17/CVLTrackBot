@@ -40,7 +40,7 @@ class Database:
             place TEXT, score TEXT)''')
         cursor.execute('''CREATE TABLE local_rating (first_name TEXT, surname TEXT PRIMARY KEY, points INT)''')
         cursor.execute('''CREATE TABLE match_table (id INT PRIMARY KEY, place INT, command TEXT, points INT)''')
-        cursor.execute('''CREATE TABLE cur_position (position INT, command TEXT PRIMARY KEY, 
+        cursor.execute('''CREATE TABLE cur_position (cur_pos INT, command TEXT PRIMARY KEY, 
         pl_games INT, points INT)''')
         cursor.execute('''CREATE TABLE telegram_ids (id INT PRIMARY KEY)''')
         connection.commit()

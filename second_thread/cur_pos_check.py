@@ -6,18 +6,23 @@ from ParserCVL.mainParser import parser
 
 def make_resulting_message(differences, request):
     resulting_message = ''
-    for diff in differences:
-        if diff == "diff_pos":
-            resulting_message += ''
+    if 'diff_pos_up' in differences:
+        resulting_message += f"Команда *{request[1]}* поднялась в таблице лиги\n\n"
+    elif 'diff_pos_down' in differences:
+        resulting_message += f"Команда *{request[1]}* опустилась в таблице лиги\n\n"
+    resulting_message += f"Текущее место команды *{request[1]}*: *{request[0]}*\n" \
+                         f"Количество очков: *{request[3]}*"
+    return resulting_message
 
 
-def check_cur_pos():
+async def check_cur_pos():
     request = parser.get_current_position()
     differences = compare_db_w_cur_pos(request)
     telegram_ids = database.select_telegram_ids()
     if telegram_ids:
         for tid in telegram_ids:
             if len(differences) == 0:
-                await bot.send_message(tid, "Изменений в текущей позиции команды нету")
+                await bot.send_message(int(tid[0]), "Изменений в текущей позиции команды нету")
                 continue
-
+            res_message = make_resulting_message(differences, request)
+            await bot.send_message(tid, res_message, parse_mode="Markdown")
