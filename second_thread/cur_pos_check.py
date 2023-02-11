@@ -22,7 +22,6 @@ async def check_cur_pos():
     if telegram_ids:
         for tid in telegram_ids:
             if len(differences) == 0:
-                await bot.send_message(int(tid[0]), "Изменений в текущей позиции команды нету")
                 continue
             res_message = make_resulting_message(differences, request)
             await bot.send_message(tid, res_message, parse_mode="Markdown")

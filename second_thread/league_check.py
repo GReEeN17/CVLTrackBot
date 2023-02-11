@@ -8,7 +8,7 @@ def make_resulting_message(tt, responses, differences, league=False):
     competition = 'лиги' if league else 'кубка'
     add = 0 if league else 1
     if len(differences) == 0:
-        return f'Изменений в расписании {competition} нету'
+        return False
     resulting_message = f'Изменение в расписании {competition}: \n'
     for elem in differences:
         if elem[2] == 'postponed':
@@ -65,8 +65,10 @@ async def check_updates():
                                                   ' кубка наберите */show_cup_tt*', parse_mode='Markdown')
             if not new_season_l:
                 res_message = make_resulting_message(league_tt, responses_l, differences_l, league=True)
-                await bot.send_message(int(i[0]), res_message, parse_mode='Markdown')
+                if res_message:
+                    await bot.send_message(int(i[0]), res_message, parse_mode='Markdown')
             if not new_season_c:
                 res_message = make_resulting_message(cup_tt, responses_c, differences_c)
-                await bot.send_message(int(i[0]), res_message, parse_mode='Markdown')
+                if res_message:
+                    await bot.send_message(int(i[0]), res_message, parse_mode='Markdown')
 
