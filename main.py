@@ -7,7 +7,8 @@ import handlers
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     loop.create_task(periodic())
     executor.start_polling(dp, skip_updates=True,  on_shutdown=mainTelegram.on_shutdown)
 

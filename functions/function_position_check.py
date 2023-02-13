@@ -5,8 +5,8 @@ def compare_db_w_cur_pos(cur_pos):
     record = database.select_cur_pos()
     differences = []
     if record:
-        if int(record[0][0]) != int(cur_pos[0][0]):
-            if int(record[0][0]) < int(cur_pos[0][0]):
+        if int(record[0][0]) != int(cur_pos[0]):
+            if int(record[0][0]) < int(cur_pos[0]):
                 differences.append("diff_pos_up")
             else:
                 differences.append("diff_pos_down")

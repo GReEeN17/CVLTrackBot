@@ -24,4 +24,4 @@ async def check_cur_pos():
             if len(differences) == 0:
                 continue
             res_message = make_resulting_message(differences, request)
-            await bot.send_message(tid, res_message, parse_mode="Markdown")
+            await bot.send_message(int(tid[0]), res_message, parse_mode="Markdown")
